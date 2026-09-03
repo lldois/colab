@@ -6,103 +6,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  download-papers:
+  download-missing:
     runs-on: ubuntu-latest
     steps:
-      - name: Download and validate papers
+      - name: Download and validate missing papers
         shell: bash
         run: |
-          set -u
+          set -euxo pipefail
           mkdir -p papers
-          : > download_report.txt
-          cat > /tmp/papers.tsv <<'EOF'
-          2016_FFM_Field_Aware_Factorization_Machines_for_CTR_Prediction.pdf|https://www.csie.ntu.edu.tw/~cjlin/papers/ffm.pdf
-          2016_DeepCrossing_Deep_Crossing_Web_Scale_Modeling.pdf|https://www.kdd.org/kdd2016/papers/files/adf0975-shanA.pdf
-          2016_FNN_Deep_Learning_over_Multi_Field_Categorical_Data.pdf|https://arxiv.org/pdf/1601.02376
-          2016_PNN_Product_based_Neural_Networks.pdf|https://arxiv.org/pdf/1611.00144
-          2016_WideDeep_Wide_and_Deep_Learning_for_Recommender_Systems.pdf|https://arxiv.org/pdf/1606.07792
-          2016_YouTubeDNN_Deep_Neural_Networks_for_YouTube_Recommendations.pdf|https://research.google.com/pubs/archive/45530.pdf
-          2017_DeepFM_DeepFM.pdf|https://arxiv.org/pdf/1703.04247
-          2017_DCN_Deep_and_Cross_Network.pdf|https://arxiv.org/pdf/1708.05123
-          2018_DIN_Deep_Interest_Network.pdf|https://arxiv.org/pdf/1706.06978
-          2018_xDeepFM_xDeepFM.pdf|https://arxiv.org/pdf/1803.05170
-          2018_ESMM_Entire_Space_Multi_Task_Model.pdf|https://arxiv.org/pdf/1804.07931
-          2018_MMoE_Multi_gate_Mixture_of_Experts.pdf|https://raw.githubusercontent.com/madkay/paper/master/Modeling%20Task%20Relationships%20in%20Multi-task%20Learning%20with%20Multi-gate%20Mixture-of-Experts.pdf
-          2019_DIEN_Deep_Interest_Evolution_Network.pdf|https://arxiv.org/pdf/1809.03672
-          2019_AutoInt_Automatic_Feature_Interaction_Learning.pdf|https://arxiv.org/pdf/1810.11921
-          2019_BST_Behavior_Sequence_Transformer.pdf|https://arxiv.org/pdf/1905.06874
-          2019_MIMN_Long_Sequential_User_Behavior_Modeling.pdf|https://arxiv.org/pdf/1905.09248
-          2019_DLRM_Deep_Learning_Recommendation_Model.pdf|https://arxiv.org/pdf/1906.00091
-          2019_YouTube_MTL_Recommending_What_Video_to_Watch_Next.pdf|https://raw.githubusercontent.com/ShaoQiBNU/Google_MTL/main/Recommending%20What%20Video%20to%20Watch%20Next%20A%20Multitask%20Ranking%20System.pdf
-          2020_SIM_Search_based_User_Interest_Modeling.pdf|https://arxiv.org/pdf/2006.05639
-          2020_DCNv2_Improved_Deep_and_Cross_Network.pdf|https://arxiv.org/pdf/2008.13535
-          2020_PLE_Progressive_Layered_Extraction.pdf|https://datawhalechina.github.io/torch-rechub/file/PDF/2020%20%28Tencent%29%20%28Recsys%29%20%5BPLE%5D%20Progressive%20Layered%20.pdf
-          2020_CAN_Revisiting_Feature_Co_Action.pdf|https://arxiv.org/pdf/2011.05625
-          2021_MaskNet_Feature_Wise_Multiplication.pdf|https://arxiv.org/pdf/2102.07619
-          2021_STAR_One_Model_to_Serve_All.pdf|https://arxiv.org/pdf/2101.11427
-          2021_AITM_Sequential_Dependence_Multi_step_Conversions.pdf|https://arxiv.org/pdf/2105.08489
-          2022_DHEN_Deep_Hierarchical_Ensemble_Network.pdf|https://arxiv.org/pdf/2203.11014
-          2023_TransAct_Transformer_based_Realtime_User_Action_Model.pdf|https://arxiv.org/pdf/2306.00248
-          2023_HiFormer_Heterogeneous_Feature_Interactions.pdf|https://arxiv.org/pdf/2311.05884
-          2024_Wukong_Towards_a_Scaling_Law_for_Large_Scale_Recommendation.pdf|https://arxiv.org/pdf/2403.02545
-          2024_HSTU_Actions_Speak_Louder_than_Words.pdf|https://proceedings.mlr.press/v235/zhai24a/zhai24a.pdf
-          2024_InterFormer_Heterogeneous_Interaction_Learning.pdf|https://arxiv.org/pdf/2411.09852
-          2025_RankGPT_Towards_Large_scale_Generative_Ranking.pdf|https://arxiv.org/pdf/2505.04180
-          2025_LONGER_Scaling_Up_Long_Sequence_Modeling.pdf|https://arxiv.org/pdf/2505.04421
-          2025_RankMixer_Scaling_Up_Ranking_Models.pdf|https://arxiv.org/pdf/2507.15551
-          2025_OneTrans_Unified_Feature_Interaction_and_Sequence_Modeling.pdf|https://arxiv.org/pdf/2510.26104
-          2025_FAT_From_Scaling_to_Structured_Expressivity.pdf|https://arxiv.org/pdf/2511.12081
-          2026_HyFormer_Revisiting_Sequence_Modeling_and_Feature_Interaction.pdf|https://arxiv.org/pdf/2601.12681
-          2026_TokenMixer_Large_Scaling_Up_Large_Ranking_Models.pdf|https://arxiv.org/pdf/2602.06563
-          2026_EST_Efficient_Scaling_Laws_in_CTR_Prediction.pdf|https://arxiv.org/pdf/2602.10811
-          2026_MixFormer_Co_Scaling_Up_Dense_and_Sequence.pdf|https://arxiv.org/pdf/2602.14110
-          2026_SORT_Systematically_Optimized_Ranking_Transformer.pdf|https://arxiv.org/pdf/2603.03988
-          2026_UniMixer_Unified_Architecture_for_Scaling_Laws.pdf|https://arxiv.org/pdf/2604.00590
-          2026_UniPinRec_Unifying_Generative_Retrieval_and_Ranking.pdf|https://arxiv.org/pdf/2606.00422
-          2026_WHALE_Scalable_Unified_Model_with_Wukong_HSTU.pdf|https://arxiv.org/pdf/2607.17017
-          2026_UniR2_Unifying_Generative_Recall_and_Multi_Objective_Ranking.pdf|https://arxiv.org/pdf/2607.24439
-          2026_GenRec_LLM_Backed_Recommendation_Ranker_at_Netflix.pdf|https://arxiv.org/pdf/2608.10257
-          2026_OneModel_Platform_Scale_Multi_Scenario_Ranking.pdf|https://arxiv.org/pdf/2608.18606
-          2026_CADET_Context_Conditioned_Ads_CTR_Decoder_Only_Transformer.pdf|https://arxiv.org/pdf/2602.11410
-          2026_ReST_From_Language_to_Behavior.pdf|https://arxiv.org/pdf/2609.01240
-          2026_TGR_Advancing_Industrial_Recommendation.pdf|https://arxiv.org/pdf/2609.00986
-          EOF
-          sed -i 's/^          //' /tmp/papers.tsv
-
-          ok=0
-          fail=0
-          while IFS='|' read -r name url; do
-            [ -n "$name" ] || continue
-            tmp="papers/.${name}.part"
-            echo "Downloading $name"
-            if curl -A 'Mozilla/5.0 paper-archiver/1.0' -L --fail --retry 5 --retry-delay 2 --retry-all-errors --connect-timeout 20 --max-time 240 -o "$tmp" "$url"; then
-              if [ "$(head -c 5 "$tmp" 2>/dev/null)" = '%PDF-' ]; then
-                mv "$tmp" "papers/$name"
-                bytes=$(stat -c%s "papers/$name")
-                echo "OK|$name|$bytes|$url" >> download_report.txt
-                ok=$((ok+1))
-              else
-                echo "FAIL_NOT_PDF|$name|$url" >> download_report.txt
-                rm -f "$tmp"
-                fail=$((fail+1))
-              fi
-            else
-              echo "FAIL_DOWNLOAD|$name|$url" >> download_report.txt
-              rm -f "$tmp"
-              fail=$((fail+1))
-            fi
-            sleep 1
-          done < /tmp/papers.tsv
-          echo "SUMMARY|OK=$ok|FAIL=$fail" >> download_report.txt
-          cat download_report.txt
-          test "$ok" -gt 0
-
-      - name: Upload paper artifact
+          curl -A 'Mozilla/5.0 paper-archiver/1.0' -L --fail --retry 5 --retry-delay 2 --retry-all-errors \
+            -o papers/2020_PLE_Progressive_Layered_Extraction.pdf \
+            'https://raw.githubusercontent.com/madkay/paper/master/2020%20%28Tencent%29%20%28Recsys%29%20%5BPLE%5D%20Progressive%20Layered%20Extraction%20%28PLE%29%20-%20A%20Novel%20Multi-Task%20Learning%20%28MTL%29%20Model%20for%20Personalized%20Recommendations.pdf'
+          curl -A 'Mozilla/5.0 paper-archiver/1.0' -L --fail --retry 5 --retry-delay 2 --retry-all-errors \
+            -o papers/2024_HSTU_Actions_Speak_Louder_than_Words.pdf \
+            'https://arxiv.org/pdf/2402.17152'
+          for f in papers/*.pdf; do
+            test "$(head -c 5 "$f")" = '%PDF-'
+            file "$f"
+            ls -lh "$f"
+          done
+      - name: Upload missing papers
         uses: actions/upload-artifact@v4
         with:
-          name: ranking-papers-2016-2026
-          path: |
-            papers/*.pdf
-            download_report.txt
+          name: ranking-papers-missing-two
+          path: papers/*.pdf
           if-no-files-found: error
           retention-days: 3
