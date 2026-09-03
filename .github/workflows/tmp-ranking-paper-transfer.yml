@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Download test paper
         run: |
+          set -euxo pipefail
           mkdir -p papers
           curl -L --fail --retry 3 -o papers/2016_WideDeep_Wide_and_Deep_Learning_for_Recommender_Systems.pdf https://arxiv.org/pdf/1606.07792
           file papers/*.pdf
