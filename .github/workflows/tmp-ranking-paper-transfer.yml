@@ -1,0 +1,23 @@
+name: tmp-ranking-paper-transfer
+on:
+  push:
+    paths:
+      - '.github/workflows/tmp-ranking-paper-transfer.yml'
+  workflow_dispatch:
+
+jobs:
+  test-transfer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download test paper
+        run: |
+          mkdir -p papers
+          curl -L --fail --retry 3 -o papers/2016_WideDeep_Wide_and_Deep_Learning_for_Recommender_Systems.pdf https://arxiv.org/pdf/1606.07792
+          file papers/*.pdf
+          ls -lh papers
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ranking-paper-test
+          path: papers/*.pdf
+          if-no-files-found: error
